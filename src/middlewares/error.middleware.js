@@ -1,3 +1,4 @@
+const { TokenExpiredError } = require("jsonwebtoken");
 const {
   NotFoundError,
   AuthenticationError,
@@ -15,6 +16,11 @@ module.exports = function (err, req, res, next) {
     return res.status(err.statusCode).send({
       success: false,
       errors: err.message,
+    });
+  } else if (err instanceof TokenExpiredError) {
+    return res.status(500).send({
+      success: false,
+      errors: "Expired",
     });
   } else {
     return res.status(500).send({

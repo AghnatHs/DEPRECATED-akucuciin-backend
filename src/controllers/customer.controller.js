@@ -19,7 +19,12 @@ const CustomerController = {
   },
   verify: async (req, res, next) => {
     try {
-    } catch (e) {}
+      const result = await CustomerService.verify(req);
+      return res.status(200).json({ success: true, data: result });
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
   },
   login: async (req, res, next) => {
     try {
@@ -51,7 +56,6 @@ const CustomerController = {
         message: result,
       });
     } catch (e) {
-      console.log(e);
       next(e);
     }
   },

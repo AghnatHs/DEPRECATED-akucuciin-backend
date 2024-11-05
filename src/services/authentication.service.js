@@ -17,6 +17,7 @@ const AuthenticationService = {
     const customer = CustomerQuery.getCustomerForAuth.get(credentials.email);
     if (!customer)
       throw new AuthenticationError("Login gagal, kredensial salah");
+    if (customer.isActive === 0) throw new AuthenticationError("Login gagal, silakan aktivasi akun");
 
     const isPasswordMatch = await bcrypt.compare(
       credentials.password,

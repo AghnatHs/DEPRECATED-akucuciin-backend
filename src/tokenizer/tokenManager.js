@@ -1,9 +1,12 @@
 const jwt = require("jsonwebtoken");
-const { v7: uuidV7} = require('uuid');
+const { v7: uuidV7 } = require("uuid");
 
 var jwtMaxAgeInSeconds = Number(process.env.JWT_MAX_AGE);
+var jwtRegisterMaxAgeInSeconds = Number(process.env.VERIFY_MAX_AGE);
+
 var jwtAccessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
 var jwtRefreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
+var jwtRegisterSecret = process.env.JWT_REGISTER_SECRET;
 const TokenManager = {
   generateAccessToken: (credentials) =>
     jwt.sign(
@@ -18,9 +21,18 @@ const TokenManager = {
     jwt.sign(
       {
         ...credentials,
-        unique: uuidV7()
+        unique: uuidV7(),
       },
       jwtRefreshTokenSecret
+    ),
+  generateRegisterToken: (id) =>
+    jwt.sign(
+      {
+        id: id,
+        unique: uuidV7(),
+        exp: Math.floor(Date.now() / 1000) + jwtRegisterMaxAgeInSeconds,
+      },
+      jwtRegisterSecret
     ),
   verifyToken: (token, secret) => jwt.verify(token, secret),
 };

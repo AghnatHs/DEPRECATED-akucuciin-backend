@@ -2,12 +2,18 @@ const bcrypt = require("bcrypt");
 const { v7: uuidV7 } = require("uuid");
 
 const { CustomerQuery } = require("../database/query");
-const { BadRequestError } = require("../errors/customError");
+const {
+  BadRequestError,
+  AuthenticationError,
+} = require("../errors/customError");
 const {
   postCustomerSchema,
   putCustomerSchema,
 } = require("../validators/customer.validator");
 const validate = require("../validators/validator");
+const TokenManager = require("../tokenizer/tokenManager");
+const MailerService = require("./mailer.service");
+const { verify } = require("jsonwebtoken");
 
 const CustomerService = {
   get: async (req) => {
@@ -27,7 +33,26 @@ const CustomerService = {
 
     CustomerQuery.postCustomer.run(newCustomer);
     const { id, email, name, address, telephone } = newCustomer;
-    return { id, email, name, address, telephone, id };
+
+    const registerToken = TokenManager.generateRegisterToken(id);
+    MailerService.sendEmail(email, registerToken);
+
+    return { id, email, name, address, telephone };
+  },
+  verify: async (req) => {
+    const { register_token } = req.params;
+    const { id} = TokenManager.verifyToken(
+      register_token,
+      process.env.JWT_REGISTER_SECRET
+    );
+
+    const { isActive } = CustomerQuery.getActiveOfCustomer.get(id);
+    if (isActive === undefined) throw new AuthenticationError("Invalid");
+    if (isActive === 1) throw new AuthenticationError("Akun sudah diaktivasi");
+
+    CustomerQuery.activateCustomer.run({ id });
+
+    return "Activated";
   },
   put: async (req) => {
     const customerUpdated = validate(putCustomerSchema, req.body);

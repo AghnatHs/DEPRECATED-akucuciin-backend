@@ -4,13 +4,24 @@ const CustomerQuery = {
   isEmailExists: db.prepare(
     `SELECT count(email) as count FROM Customer WHERE email = ?`
   ),
+  activateCustomer: db.prepare(
+    `UPDATE Customer
+    SET isActive = 1
+    WHERE id = @id`
+  ),
+  deleteCustomer: db.prepare(
+    ` DELETE FROM Customer
+     WHERE id = ?
+    `
+  ),
+  getActiveOfCustomer: db.prepare(`SELECT isActive FROM Customer WHERE id = ?`),
   getCustomerForAuth: db.prepare(`
     SELECT
         id 
         , email
         , password
-    FROM Customer WHERE email = ?`
-  ),
+        , isActive
+    FROM Customer WHERE email = ?`),
   getCustomerById: db.prepare(`
     SELECT 
         id

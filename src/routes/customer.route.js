@@ -26,7 +26,7 @@ router.post("/api/customer/logout", async (req, res, next) =>
   CustomerController.logout(req, res, next)
 );
 
-router.post("/verify/:id", async (req, res, next) => {
+router.get("/verify/:register_token", async (req, res, next) => {
   CustomerController.verify(req, res, next);
 });
 
