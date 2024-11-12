@@ -3,7 +3,7 @@ const Joi = require("joi");
 const postCustomerSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string()
-    .regex(new RegExp(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,255}$/))
+    .regex(new RegExp(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,255}$/))
     .required(),
   confirm_password: Joi.ref("password"),
   name: Joi.string().min(1).max(120).required(),

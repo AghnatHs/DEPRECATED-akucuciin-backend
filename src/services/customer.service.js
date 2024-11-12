@@ -13,7 +13,6 @@ const {
 const validate = require("../validators/validator");
 const TokenManager = require("../tokenizer/tokenManager");
 const MailerService = require("./mailer.service");
-const { verify } = require("jsonwebtoken");
 
 const CustomerService = {
   get: async (req) => {
@@ -35,7 +34,7 @@ const CustomerService = {
     const { id, email, name, address, telephone } = newCustomer;
 
     const registerToken = TokenManager.generateRegisterToken(id);
-    MailerService.sendEmail(email, registerToken);
+    MailerService.sendVerifyEmail(email, registerToken);
 
     return { id, email, name, address, telephone };
   },

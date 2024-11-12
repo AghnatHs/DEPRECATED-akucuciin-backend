@@ -7,6 +7,7 @@ const {
 } = require("../errors/customError");
 
 module.exports = function (err, req, res, next) {
+  console.log(`ERROR! ${new Date()} => ${req.method} ${req.url} => ${err}`);
   if (
     err instanceof NotFoundError ||
     err instanceof AuthenticationError ||

@@ -76,7 +76,30 @@ const AuthenticationQuery = {
   ),
 };
 
+const OrderQuery = {
+  postOrder: db.prepare(`
+  INSERT INTO LaundryOrder(
+    id
+    , customer_id
+    , laundry_type
+    , code_referral
+    , note
+    , pickup_date
+    , delivery_date
+  ) VALUES (
+    @id
+    , @customer_id
+    , @laundry_type
+    , @code_referral
+    , @note
+    , @pickup_date
+    , @delivery_date
+  )
+  `),
+};
+
 module.exports = {
   AuthenticationQuery,
   CustomerQuery,
+  OrderQuery,
 };

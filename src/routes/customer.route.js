@@ -5,11 +5,13 @@ const CustomerController = require("../controllers/customer.controller");
 
 const router = Router();
 
+// get customer data 
 router.get(
   "/api/customer",
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => CustomerController.get(req, res, next)
 );
+// update customer data
 router.put(
   "/api/customer",
   passport.authenticate("jwt", { session: false }),
@@ -26,7 +28,8 @@ router.post("/api/customer/logout", async (req, res, next) =>
   CustomerController.logout(req, res, next)
 );
 
-router.get("/verify/:register_token", async (req, res, next) => {
+// verify customer email
+router.get("/verify/customer/:register_token", async (req, res, next) => {
   CustomerController.verify(req, res, next);
 });
 

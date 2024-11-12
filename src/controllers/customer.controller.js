@@ -20,9 +20,10 @@ const CustomerController = {
   verify: async (req, res, next) => {
     try {
       const result = await CustomerService.verify(req);
-      return res.status(200).json({ success: true, data: result });
+      res.redirect(process.env.VERIFY_URI_REDIRECT_SUCCESS);
     } catch (e) {
       console.log(e);
+      res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR);
       next(e);
     }
   },

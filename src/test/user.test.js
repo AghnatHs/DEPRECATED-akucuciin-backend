@@ -1,6 +1,5 @@
 const supertest = require("supertest");
 const app = require("../app");
-const db = require("../database/db");
 
 const testPayload = {
   email: "bimic21495@anypng.com",

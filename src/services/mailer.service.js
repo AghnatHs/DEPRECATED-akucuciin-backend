@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const { ServerError } = require("../errors/customError");
 
 const MailerService = {
-  sendEmail: (email, registerToken) => {
+  sendVerifyEmail: (email, registerToken) => {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
