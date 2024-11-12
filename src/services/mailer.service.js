@@ -21,7 +21,7 @@ const MailerService = {
       from: sender,
       to: email,
       subject: "Aktivasi akun AkuCuciin",
-      html: `Press <a href="${process.env.VERIFY_URI}${registerToken}">Verify Email</a> to verify, valid for 5 minutes. If you feel you are not registered, please ignore this message.`,
+      html: `Press <a href="${process.env.VERIFY_URI}${email}/${registerToken}">Verify Email</a> to verify, valid for 5 minutes. If you feel you are not registered, please ignore this message.`,
     };
 
     transporter.sendMail(mailOptions, function (error, response) {

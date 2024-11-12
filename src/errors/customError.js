@@ -11,6 +11,13 @@ class BadRequestError extends Error {
       this.statusCode = 401;
     }
   }
+
+  class TokenInvalidError extends Error {
+    constructor(message = "Token Error") {
+      super(message);
+      this.statusCode = 401;
+    }
+  }
   
   class AuthorizationError extends Error {
     constructor(message = "Forbidden") {
@@ -38,6 +45,7 @@ class BadRequestError extends Error {
     AuthenticationError,
     AuthorizationError,
     NotFoundError,
-    ServerError
+    ServerError,
+    TokenInvalidError
   };
   

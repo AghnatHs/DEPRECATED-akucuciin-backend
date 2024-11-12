@@ -14,7 +14,13 @@ const CustomerQuery = {
      WHERE id = ?
     `
   ),
+  deleteCustomerByEmail: db.prepare(
+    ` DELETE FROM Customer
+     WHERE email = ?
+    `
+  ),
   getActiveOfCustomer: db.prepare(`SELECT isActive FROM Customer WHERE id = ?`),
+  getActiveOfCustomerByEmail: db.prepare(`SELECT isActive FROM Customer WHERE email = ?`),
   getCustomerForAuth: db.prepare(`
     SELECT
         id 

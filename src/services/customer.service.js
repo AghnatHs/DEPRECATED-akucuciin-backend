@@ -5,6 +5,7 @@ const { CustomerQuery } = require("../database/query");
 const {
   BadRequestError,
   AuthenticationError,
+  TokenInvalidError,
 } = require("../errors/customError");
 const {
   postCustomerSchema,
@@ -40,13 +41,13 @@ const CustomerService = {
   },
   verify: async (req) => {
     const { register_token } = req.params;
-    const { id} = TokenManager.verifyToken(
+    const { id } = TokenManager.verifyToken(
       register_token,
       process.env.JWT_REGISTER_SECRET
     );
 
     const { isActive } = CustomerQuery.getActiveOfCustomer.get(id);
-    if (isActive === undefined) throw new AuthenticationError("Invalid");
+    if (isActive === undefined) throw new TokenInvalidError("Invalid");
     if (isActive === 1) throw new AuthenticationError("Akun sudah diaktivasi");
 
     CustomerQuery.activateCustomer.run({ id });

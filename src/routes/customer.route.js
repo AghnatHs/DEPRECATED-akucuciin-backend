@@ -29,7 +29,7 @@ router.post("/api/customer/logout", async (req, res, next) =>
 );
 
 // verify customer email
-router.get("/verify/customer/:register_token", async (req, res, next) => {
+router.get("/verify/customer/:email/:register_token", async (req, res, next) => {
   CustomerController.verify(req, res, next);
 });
 

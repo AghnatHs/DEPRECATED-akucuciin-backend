@@ -1,5 +1,8 @@
+const { TokenExpiredError } = require("jsonwebtoken");
 const AuthenticationService = require("../services/authentication.service");
 const CustomerService = require("../services/customer.service");
+const { CustomerQuery } = require("../database/query");
+const { AuthenticationError, TokenInvalidError } = require("../errors/customError");
 
 const CustomerController = {
   get: async (req, res, next) => {
@@ -22,9 +25,20 @@ const CustomerController = {
       const result = await CustomerService.verify(req);
       res.redirect(process.env.VERIFY_URI_REDIRECT_SUCCESS);
     } catch (e) {
-      console.log(e);
-      res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR);
-      next(e);
+      if (e instanceof TokenExpiredError) {
+        try {
+          const { email } = req.params;
+          const { isActive } = CustomerQuery.getActiveOfCustomerByEmail.get(email);
+          if (isActive) return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_ALREADY_ACT);
+
+          CustomerQuery.deleteCustomerByEmail.run(email);
+        } catch (err) {}
+      } else if (e instanceof TokenInvalidError) {
+        return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_INVALID);
+      } else if (e instanceof AuthenticationError) {
+        return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_ALREADY_ACT);
+      }
+      return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_EXPIRED);
     }
   },
   login: async (req, res, next) => {
