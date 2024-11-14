@@ -2,7 +2,11 @@ const { TokenExpiredError } = require("jsonwebtoken");
 const AuthenticationService = require("../services/authentication.service");
 const CustomerService = require("../services/customer.service");
 const { CustomerQuery } = require("../database/query");
-const { AuthenticationError, TokenInvalidError } = require("../errors/customError");
+const {
+  AuthenticationError,
+  TokenInvalidError,
+} = require("../errors/customError");
+const APPCONFIG = require("../configs/app.config");
 
 const CustomerController = {
   get: async (req, res, next) => {
@@ -23,22 +27,24 @@ const CustomerController = {
   verify: async (req, res, next) => {
     try {
       const result = await CustomerService.verify(req);
-      res.redirect(process.env.VERIFY_URI_REDIRECT_SUCCESS);
+      res.redirect(APPCONFIG.url.verifyEmailSuccess);
     } catch (e) {
       if (e instanceof TokenExpiredError) {
         try {
           const { email } = req.params;
-          const { isActive } = CustomerQuery.getActiveOfCustomerByEmail.get(email);
-          if (isActive) return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_ALREADY_ACT);
+          const { isActive } =
+            CustomerQuery.getActiveOfCustomerByEmail.get(email);
+          if (isActive)
+            return res.redirect(APPCONFIG.url.verifyEmailAlreadyActive);
 
           CustomerQuery.deleteCustomerByEmail.run(email);
         } catch (err) {}
       } else if (e instanceof TokenInvalidError) {
-        return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_INVALID);
+        return res.redirect(APPCONFIG.url.verifyEmailInvalid);
       } else if (e instanceof AuthenticationError) {
-        return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_ALREADY_ACT);
+        return res.redirect(APPCONFIG.url.verifyEmailAlreadyActive);
       }
-      return res.redirect(process.env.VERIFY_URI_REDIRECT_ERROR_EXPIRED);
+      return res.redirect(APPCONFIG.url.verifyEmailExpired);
     }
   },
   login: async (req, res, next) => {

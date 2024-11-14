@@ -17,7 +17,8 @@ const AuthenticationService = {
     const customer = CustomerQuery.getCustomerForAuth.get(credentials.email);
     if (!customer)
       throw new AuthenticationError("Login gagal, kredensial salah");
-    if (customer.isActive === 0) throw new AuthenticationError("Login gagal, silakan aktivasi akun");
+    if (customer.isActive === 0)
+      throw new AuthenticationError("Login gagal, silakan aktivasi akun");
 
     const isPasswordMatch = await bcrypt.compare(
       credentials.password,
@@ -30,7 +31,15 @@ const AuthenticationService = {
     let accessToken = TokenManager.generateAccessToken({ id, email });
     let refreshToken = TokenManager.generateRefreshToken({ id, email });
 
-    AuthenticationQuery.postRefreshToken.run({ id, refreshToken });
+    try {
+      AuthenticationQuery.postRefreshToken.run({ id, refreshToken });
+    } catch (e) {
+      try {
+        AuthenticationQuery.putRefreshTokenLogin.run({id, newRefreshToken: refreshToken});
+      } catch (err) {
+        throw err
+      }
+    }
 
     return { accessToken, refreshToken };
   },

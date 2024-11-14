@@ -71,6 +71,9 @@ const AuthenticationQuery = {
         @refreshToken
     )
   `),
+  putRefreshTokenLogin: db.prepare(`
+    UPDATE Authentication SET refresh_token = @newRefreshToken WHERE customer_id = @id
+  `), // put new refresh token when already logged in another device
   putRefreshToken: db.prepare(`
     UPDATE Authentication SET refresh_token = @newRefreshToken WHERE refresh_token = @refreshToken
   `),
@@ -88,6 +91,7 @@ const OrderQuery = {
     id
     , customer_id
     , laundry_type
+    , laundry_content
     , code_referral
     , note
     , pickup_date
@@ -96,6 +100,7 @@ const OrderQuery = {
     @id
     , @customer_id
     , @laundry_type
+    , @laundry_content
     , @code_referral
     , @note
     , @pickup_date
