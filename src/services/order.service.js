@@ -8,7 +8,7 @@ const GoogleAPIService = require("./google_api.service");
 const OrderService = {
   post: async (req) => {
     const newOrder = validate(postOrderSchema, req.body);
-    const {
+    let {
       laundry_type,
       laundry_content,
       laundry_content_other,
@@ -27,9 +27,10 @@ const OrderService = {
       telephone: customer_telephone,
     } = CustomerQuery.getCustomerById.get(req.user.id);
 
-    const addDaysToISO = (isoString, days) => {
+    const addDaysAndNormalizedToISO = (isoString, days) => {
       const date = new Date(isoString);
       date.setDate(date.getDate() + days);
+      date.setHours(0, 0, 0, 0);
       return date.toISOString();
     };
 
@@ -39,7 +40,11 @@ const OrderService = {
     } else if (laundry_type === "Express 1 Hari") {
       dayToAdd = 1;
     }
-    const delivery_date = addDaysToISO(pickup_date, dayToAdd);
+    pickup_date = addDaysAndNormalizedToISO(pickup_date, 0);
+    const delivery_date = addDaysAndNormalizedToISO(pickup_date, dayToAdd);
+
+    console.log(pickup_date);
+    console.log(delivery_date);
 
     OrderQuery.postOrder.run({
       id,
@@ -54,7 +59,7 @@ const OrderService = {
       delivery_date,
     });
 
-    const order = {
+    const orderToSheets = {
       id,
       customer_id,
       customer_email,
@@ -67,11 +72,19 @@ const OrderService = {
       gmaps_pinpoint,
       code_referral,
       note,
-      pickup_date,
-      delivery_date,
+      pickup_date: new Date(pickup_date).toLocaleString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+      }),
+      delivery_date: new Date(delivery_date).toLocaleString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+      }),
     };
 
-    GoogleAPIService.sendOrderToSheets(order);
+    await GoogleAPIService.sendOrderToSheets(orderToSheets);
 
     return {
       id,
