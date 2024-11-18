@@ -15,6 +15,10 @@ const APPCONFIG = {
       ? process.env.VERIFY_URL_REDIRECT_ERROR_ALREADY_ACT
       : process.env.PROD_VERIFY_URL_REDIRECT_ERROR_ALREADY_ACT,
   },
+  googleEnv: {
+    keyFile: process.env.GOOGLE_KEYFILE,
+    sheetId: process.env.GOOGLE_SPREADSHEET_ID
+  }
 };
 
 module.exports = APPCONFIG;

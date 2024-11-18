@@ -92,6 +92,8 @@ const OrderQuery = {
     , customer_id
     , laundry_type
     , laundry_content
+    , laundry_content_other
+    , gmaps_pinpoint
     , code_referral
     , note
     , pickup_date
@@ -101,6 +103,8 @@ const OrderQuery = {
     , @customer_id
     , @laundry_type
     , @laundry_content
+    , @laundry_content_other
+    , @gmaps_pinpoint
     , @code_referral
     , @note
     , @pickup_date

@@ -3,7 +3,7 @@ const Joi = require("joi");
 const postCustomerSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string()
-    .regex(new RegExp(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,255}$/))
+    .pattern(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/)
     .required(),
   confirm_password: Joi.ref("password"),
   name: Joi.string().min(1).max(120).required(),
@@ -15,9 +15,14 @@ const putCustomerSchema = Joi.object({
   name: Joi.string().min(1).max(120).optional(),
   address: Joi.string().min(1).max(255).optional(),
   telephone: Joi.string().pattern(new RegExp(/^\d+$/)).optional(),
-})
+});
+
+const postRequestResetPassword = Joi.object({
+  email: Joi.string().email().required(),
+});
 
 module.exports = {
   postCustomerSchema,
-  putCustomerSchema
+  putCustomerSchema,
+  postRequestResetPassword,
 };

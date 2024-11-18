@@ -1,6 +1,5 @@
 require("dotenv").config();
 const cors = require("cors");
-const { google } = require("googleapis");
 const express = require("express");
 const { default: rateLimit } = require("express-rate-limit");
 const passport = require("passport");
@@ -12,17 +11,6 @@ const orderRoute = require("./routes/order.route");
 const APPCONFIG = require("./configs/app.config");
 
 require("./auth/jwt.auth");
-
-// --GOOGLE API
-const googleCredentials = require("./../sheet_credential.json");
-const auth = new google.auth.GoogleAuth({
-  keyFile: "./sheet_credential.json",
-  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-});
-const sheets = google.sheets({ version: "v4", auth });
-const spreadsheetId = "1QOmu0DcKIPVws_UgcK2sMMA5pVdWIJCGkqmzmPAqkHc";
-const sheetName = "akucuciin_sheet_test";
-// --GOOGLE API
 
 const app = express();
 app.use(
@@ -49,6 +37,7 @@ if (APPCONFIG.isDevelopment) app.set("trust proxy", true);
 else app.set("trust proxy", false);
 
 app.use(passport.initialize());
+
 // --GOOGLE API
 app.post('/add-to-sheet', async (req, res) => {
   try {

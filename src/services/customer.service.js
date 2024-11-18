@@ -10,6 +10,7 @@ const {
 const {
   postCustomerSchema,
   putCustomerSchema,
+  postRequestResetPassword,
 } = require("../validators/customer.validator");
 const validate = require("../validators/validator");
 const TokenManager = require("../tokenizer/tokenManager");
@@ -67,6 +68,9 @@ const CustomerService = {
     };
     CustomerQuery.putCustomer.run(queryValues);
     return "Customer data updated succesfully";
+  },
+  requestResetPassword: async (req) => {
+    const { email } = validate(postRequestResetPassword, req.body);
   },
 };
 
