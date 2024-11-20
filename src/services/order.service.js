@@ -67,7 +67,7 @@ const OrderService = {
       customer_address,
       customer_telephone,
       laundry_type,
-      laundry_content: laundry_content.join(", "),
+      laundry_content: laundry_content.sort().join(", "),
       laundry_content_other,
       gmaps_pinpoint,
       code_referral,
@@ -76,11 +76,13 @@ const OrderService = {
         weekday: "long",
         year: "numeric",
         month: "long",
+        day: "numeric"
       }),
       delivery_date: new Date(delivery_date).toLocaleString("id-ID", {
         weekday: "long",
         year: "numeric",
         month: "long",
+        day: "numeric"
       }),
     };
 
