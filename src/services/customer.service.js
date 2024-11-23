@@ -90,6 +90,11 @@ const CustomerService = {
     const isEmailSame = emailParams === emailFromToken;
     if (!isEmailSame) throw new AuthenticationError("Credentials changed");
 
+    const isEmailExists = CustomerQuery.isEmailExists.get(
+      emailParams || emailFromToken
+    ).count;
+    if (!isEmailExists) throw new BadRequestError("Wrong credentials");
+
     const newPassword = await bcrypt.hash(payload.password, 10);
     CustomerQuery.putPassword.run({ newPassword, email: emailFromToken });
     return `Password for ${payload.email} changed succesfully`

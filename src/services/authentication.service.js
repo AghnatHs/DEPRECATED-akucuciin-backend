@@ -16,7 +16,7 @@ const AuthenticationService = {
 
     const customer = CustomerQuery.getCustomerForAuth.get(credentials.email);
     if (!customer)
-      throw new AuthenticationError("Login gagal, kredensial salah");
+      throw new AuthenticationError("Login gagal, akun tidak ditemukan");
     if (customer.isActive === 0)
       throw new AuthenticationError("Login gagal, silakan aktivasi akun");
 

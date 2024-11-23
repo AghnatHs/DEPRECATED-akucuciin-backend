@@ -10,4 +10,10 @@ router.post(
   async (req, res, next) => OrderController.post(req, res, next)
 );
 
+router.get(
+  "/api/orders",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => OrderController.get(req, res, next)
+);
+
 module.exports = router;
