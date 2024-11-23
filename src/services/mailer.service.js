@@ -21,7 +21,11 @@ const MailerService = {
       from: sender,
       to: email,
       subject: "Aktivasi akun AkuCuciin",
-      html: `Press <a href="${process.env.VERIFY_URI}${email}/${registerToken}">Verify Email</a> to verify, valid for 5 minutes. If you feel you are not registered, please ignore this message.`,
+      html: `If you feel you are not registered, please ignore this message. Press <a href="${
+        process.env.VERIFY_URI
+      }${email}/${registerToken}">Verify Email</a> to verify, only valid for ${
+        Number(process.env.VERIFY_MAX_AGE) / 60
+      } minutes. `,
     };
 
     transporter.sendMail(mailOptions, function (error, response) {
@@ -39,7 +43,11 @@ const MailerService = {
       from: sender,
       to: email,
       subject: "Permintaan reset password akun AkuCuciin",
-      html: `We received a request to reset your password for your Akucuciin account. If you didnt request a password reset, you can safely ignore this email. To reset your password, click the link below: <a href="${process.env.REQUEST_PASSWORD_URI}${email}/${registerToken}"> For security purposes, this link will expire in 5 minutes.`,
+      html: `We received a request to reset your password for your Akucuciin account. If you didnt request a password reset, you can safely ignore this email. To reset your password, click the link below: <a href="${
+        process.env.RESET_PASSWORD_FORM_URI
+      }${email}/${resetPasswordToken}">Reset Password</a>. For security purposes, this link will expire in ${
+        Number(process.env.RESET_PASSWORD_MAX_AGE) / 60
+      } minutes`,
     };
 
     transporter.sendMail(mailOptions, function (error, response) {

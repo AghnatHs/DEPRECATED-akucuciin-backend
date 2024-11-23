@@ -36,6 +36,14 @@ router.get(
   }
 );
 
-router.post("/request-reset-password", async (req, res, next) => {});
+// reset password customer
+router.post("/request-reset-password", async (req, res, next) =>
+  CustomerController.requestResetPassword(req, res, next)
+);
+
+router.put(
+  "/request-reset-password/customer/:email/:reset_password_token",
+  async (req, res, next) => CustomerController.putResetPassword(req, res, next)
+);
 
 module.exports = router;

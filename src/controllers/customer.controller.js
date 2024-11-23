@@ -47,6 +47,28 @@ const CustomerController = {
       return res.redirect(APPCONFIG.url.verifyEmailExpired);
     }
   },
+  requestResetPassword: async (req, res, next) => {
+    try {
+      const result = await CustomerService.requestResetPassword(req);
+      return res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
+  putResetPassword: async (req, res, next) => {
+    try {
+      const result = await CustomerService.changePassword(req);
+      return res.status(201).json({
+        success: true,
+        data: result,
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
   login: async (req, res, next) => {
     try {
       const result = await AuthenticationService.login(req.body);

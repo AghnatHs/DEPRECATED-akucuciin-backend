@@ -11,6 +11,7 @@ const {
   postCustomerSchema,
   putCustomerSchema,
   postRequestResetPassword,
+  putCustomerPassword,
 } = require("../validators/customer.validator");
 const validate = require("../validators/validator");
 const TokenManager = require("../tokenizer/tokenManager");
@@ -71,6 +72,27 @@ const CustomerService = {
   },
   requestResetPassword: async (req) => {
     const { email } = validate(postRequestResetPassword, req.body);
+    const requestResetPasswordToken =
+      TokenManager.generateRequestResetPasswordToken(email);
+
+    MailerService.sendRequestResetPassword(email, requestResetPasswordToken);
+    return `Requested to ${email}`;
+  },
+  changePassword: async (req) => {
+    const payload = validate(putCustomerPassword, req.body);
+
+    const { email: emailParams, reset_password_token } = req.params;
+    const { email: emailFromToken } = TokenManager.verifyToken(
+      reset_password_token,
+      process.env.JWT_RESET_PASSWORD_SECRET
+    );
+
+    const isEmailSame = emailParams === emailFromToken;
+    if (!isEmailSame) throw new AuthenticationError("Credentials changed");
+
+    const newPassword = await bcrypt.hash(payload.password, 10);
+    CustomerQuery.putPassword.run({ newPassword, email: emailFromToken });
+    return `Password for ${payload.email} changed succesfully`
   },
 };
 
