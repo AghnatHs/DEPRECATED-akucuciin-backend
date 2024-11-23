@@ -25,7 +25,7 @@ app.use(express.json());
 const limiterCooldown = Number(process.env.LIMITER_COOLDOWN);
 const limiter = rateLimit({
   windowMs: limiterCooldown * 60 * 1000,
-  limit: 150,
+  limit: 80,
   message: {
     success: false,
     errors: `Too many requests, please try again in ${limiterCooldown} minutes`,

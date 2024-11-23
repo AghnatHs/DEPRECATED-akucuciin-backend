@@ -29,8 +29,8 @@ const OrderService = {
 
     const addDaysAndNormalizedToISO = (isoString, days) => {
       const date = new Date(isoString);
-      date.setDate(date.getDate() + days);
-      date.setHours(0, 0, 0, 0);
+      date.setUTCDate(date.getUTCDate() + days);
+      date.setUTCHours(0, 0, 0, 0);
       return date.toISOString();
     };
 
@@ -62,6 +62,12 @@ const OrderService = {
     const orderToSheets = {
       id,
       customer_id,
+      created_at: new Date().toLocaleString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
       customer_email,
       customer_name,
       customer_address,
@@ -76,13 +82,13 @@ const OrderService = {
         weekday: "long",
         year: "numeric",
         month: "long",
-        day: "numeric"
+        day: "numeric",
       }),
       delivery_date: new Date(delivery_date).toLocaleString("id-ID", {
         weekday: "long",
         year: "numeric",
         month: "long",
-        day: "numeric"
+        day: "numeric",
       }),
     };
 

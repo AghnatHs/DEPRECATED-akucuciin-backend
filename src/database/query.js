@@ -20,7 +20,9 @@ const CustomerQuery = {
     `
   ),
   getActiveOfCustomer: db.prepare(`SELECT isActive FROM Customer WHERE id = ?`),
-  getActiveOfCustomerByEmail: db.prepare(`SELECT isActive FROM Customer WHERE email = ?`),
+  getActiveOfCustomerByEmail: db.prepare(
+    `SELECT isActive FROM Customer WHERE email = ?`
+  ),
   getCustomerForAuth: db.prepare(`
     SELECT
         id 
@@ -54,6 +56,11 @@ const CustomerQuery = {
         , @telephone
     )
   `),
+  putPassword: db.prepare(
+    `
+      UPDATE Customer SET password = @newPassword WHERE email = @email
+    `
+  ),
   putCustomer: db.prepare(`
     UPDATE Customer 
     SET name = @name, address = @address, telephone = @telephone

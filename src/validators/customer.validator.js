@@ -21,8 +21,16 @@ const postRequestResetPassword = Joi.object({
   email: Joi.string().email().required(),
 });
 
+const putCustomerPassword = Joi.object({
+  password: Joi.string()
+    .pattern(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    .required(),
+  confirm_password: Joi.ref("password"),
+}).with("password", "confirm_password");
+
 module.exports = {
   postCustomerSchema,
   putCustomerSchema,
   postRequestResetPassword,
+  putCustomerPassword,
 };
