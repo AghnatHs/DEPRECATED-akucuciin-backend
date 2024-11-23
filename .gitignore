@@ -1,5 +1,5 @@
 .env
 sheet_credential.json
 /node_modules
-/src/database/akucuciin_main.sqlite3
+src/database/akucuciin_main.sqlite3
 todo.txt
