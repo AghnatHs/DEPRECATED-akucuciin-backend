@@ -6,6 +6,10 @@ const { OrderQuery, CustomerQuery } = require("../database/query");
 const GoogleAPIService = require("./google_api.service");
 
 const OrderService = {
+  get: async (req) => {
+    const orders = OrderQuery.getOrderByCustomerId.get(req.user.id);
+    return orders;
+  },
   post: async (req) => {
     const newOrder = validate(postOrderSchema, req.body);
     let {

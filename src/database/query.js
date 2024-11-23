@@ -93,6 +93,11 @@ const AuthenticationQuery = {
 };
 
 const OrderQuery = {
+  getOrderByCustomerId: db.prepare(`
+    SELECT 
+        *
+    FROM LaundryOrder WHERE customer_id = ?
+  `),
   postOrder: db.prepare(`
   INSERT INTO LaundryOrder(
     id
