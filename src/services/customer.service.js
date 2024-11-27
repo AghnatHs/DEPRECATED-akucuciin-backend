@@ -37,7 +37,7 @@ const CustomerService = {
     const { id, email, name, address, telephone } = newCustomer;
 
     const registerToken = TokenManager.generateRegisterToken(id);
-    MailerService.sendVerifyEmail(email, registerToken);
+    await MailerService.sendVerifyEmail(email, registerToken);
 
     return { id, email, name, address, telephone };
   },
@@ -75,7 +75,7 @@ const CustomerService = {
     const requestResetPasswordToken =
       TokenManager.generateRequestResetPasswordToken(email);
 
-    MailerService.sendRequestResetPassword(email, requestResetPasswordToken);
+    await MailerService.sendRequestResetPassword(email, requestResetPasswordToken);
     return `Requested to ${email}`;
   },
   changePassword: async (req) => {

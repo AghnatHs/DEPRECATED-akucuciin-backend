@@ -15,25 +15,27 @@ require("./auth/jwt.auth");
 const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: (origin, callback) => {
+      if (!APPCONFIG.isDevelopment) {
+        callback(null, true);
+        return;
+      }
+      const urlPattern = /^https?:\/\/(www\.)?akucuciin\.com(\/.*)?$/;
+      if (urlPattern.test(origin)) {
+        !APPCONFIG.isDevelopment ? callback(null, true) : callback(null, true);
+      } else {
+        !APPCONFIG.isDevelopment
+          ? callback(null, true)
+          : callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
-); 
-if (APPCONFIG.isDevelopment) app.set("trust proxy", true);
-else app.set("trust proxy", false);
-app.use(express.json());
+);
 
-const limiterCooldown = Number(process.env.LIMITER_COOLDOWN);
-const limiter = rateLimit({
-  windowMs: limiterCooldown * 60 * 1000,
-  limit: 80,
-  message: {
-    success: false,
-    errors: `Too many requests, please try again in ${limiterCooldown} minutes`,
-  },
-});
-app.use(limiter);
+app.set("trust proxy", false);
+app.use(express.json());
 
 app.use(passport.initialize());
 app.use(authRoute);

@@ -1,4 +1,4 @@
-const isDevelopment = process.env.DEV;
+const isDevelopment = Number(process.env.DEV);
 const APPCONFIG = {
   isDevelopment: isDevelopment,
   url: {
